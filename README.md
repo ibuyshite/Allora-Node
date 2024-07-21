@@ -228,6 +228,9 @@ docker compose up -d
 
 References: 
 https://docs.allora.network/
+
 https://github.com/0xmoei/allora-testnet/edit/main/README.md
+
+https://github.com/papaperez1/Allora
 
 
