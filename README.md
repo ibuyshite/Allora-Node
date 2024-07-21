@@ -29,6 +29,9 @@ Copy the head-id and keep it in notepad (copy before rootxxx as heighlighted)
 cat head-data/keys/identity
 ```
 ![image](https://github.com/papaperez1/Allora/assets/118633093/0fe235f7-18d1-458f-9b46-c334583be6ad)
+
+## Deployment Part 2
+
 ### Run the worker node
 ```
 rm -rf docker-compose.yml && nano docker-compose.yml
