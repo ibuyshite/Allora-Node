@@ -20,7 +20,7 @@ Storage : SSD or NVMe with at least 5GB of space
 - Visit and Request faucet : [Allora Faucet](https://faucet.testnet-1.testnet.allora.network/)
 - If there is an error, try 3-5 times
 
-  ## Deployment Part 1
+ ## Deployment Part 1
 ```
 wget https://raw.githubusercontent.com/ibuyshite/Allora-Node/main/allora.sh && chmod +x allora.sh && ./allora.sh
 ```
