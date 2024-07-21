@@ -3,8 +3,8 @@
 
 
 - You must need to buy a VPS for running Allora Node
-- You can buy from : [PQ Hosting](https://pq.hosting/en/vps)
-- You should buy VPS which is fulfilling all these requirements : 
+- You can buy from : [Contabo]([https://pq.hosting/en/vps](https://www.anrdoezrs.net/click-101219450-13796470))
+- - You should buy VPS which is fulfilling all these requirements : 
 ```bash
 Operating System : Ubuntu 22.04
 CPU : Minimum of 1/2 core
@@ -13,9 +13,9 @@ Storage : SSD or NVMe with at least 5GB of space
 ```
 ## Create Wallet & Request Faucet
 
-- Install : [Keplr Extension](https://chrome.google.com/webstore/detail/dmkamcknogkgcdfhhbddcghachkejeap)
+- Install : [Leap Extension](https://chromewebstore.google.com/detail/leap-cosmos-wallet/fcfcfllfndlomdhbehjjcoimbgofdncg)
 - Create a new Wallet
-- Visit : [Allora Website](https://app.allora.network/points/overview)
+- Visit : [Allora Website](https://app.allora.network?ref=eyJyZWZlcnJlcl9pZCI6ImY2ZDJjMzU0LTdmM2UtNDg3My05ZGExLWExNThmZDViZTZmMyJ9)
 - Copy your allora address from here
 - Visit and Request faucet : [Allora Faucet](https://faucet.testnet-1.testnet.allora.network/)
 - If there is an error, try 3-5 times
