@@ -4,7 +4,7 @@
 
 - You must need to buy a VPS for running Allora Node
 - You can buy from : [Contabo]([https://pq.hosting/en/vps](https://www.anrdoezrs.net/click-101219450-13796470))
-- - You should buy VPS which is fulfilling all these requirements : 
+- You should buy VPS which is fulfilling all these requirements : 
 ```bash
 Operating System : Ubuntu 22.04
 CPU : Minimum of 1/2 core
@@ -32,7 +32,7 @@ cat head-data/keys/identity
 
 ## Deployment Part 2
 
-### Run the worker node
+### Remove & Create New Docker Compose File
 ```
 rm -rf docker-compose.yml && nano docker-compose.yml
 ```
@@ -165,7 +165,7 @@ volumes:
   worker-data:
   head-data:
 ```
-Build and run the image
+Now We Build & Run The Image
 ```
 docker compose build
 docker compose up -d
