@@ -67,21 +67,6 @@ source .bash_profile
 go version
 ```
 
-## Install Allorad: Wallet
-```
-git clone https://github.com/allora-network/allora-chain.git
-
-cd allora-chain && make all
-
-allorad version
-```
-
-## Add Wallet
-* You can use your keplr seed-phrase to recover your wallet or create a new one
-```
-# Recover your wallet with seed-phrase
-allorad keys add testkey --recover
-
 
  ## Config HuggingFace worker
 ```console
