@@ -20,217 +20,157 @@ Storage : SSD or NVMe with at least 5GB of space
 - Visit and Request faucet : [Allora Faucet](https://faucet.testnet-1.testnet.allora.network/)
 - If there is an error, try 3-5 times
 
- ## Deployment Part 1
-```
-wget https://raw.githubusercontent.com/ibuyshite/Allora-Node/main/allora.sh && chmod +x allora.sh && ./allora.sh
-```
-Copy the head-id and keep it in notepad (copy before rootxxx as heighlighted)
-```
-cat head-data/keys/identity
-```
-![image](https://github.com/papaperez1/Allora/assets/118633093/0fe235f7-18d1-458f-9b46-c334583be6ad)
-
-## Deployment Part 2
-
-### Remove & Create New Docker Compose File
-```
-rm -rf docker-compose.yml && nano docker-compose.yml
-```
-Copy & Paste the following code in it
-Replace `head-id` & `WALLET_SEED_PHRASE`
-```
-version: '3'
-
-services:
-  inference:
-    container_name: inference-basic-eth-pred
-    build:
-      context: .
-    command: python -u /app/app.py
-    ports:
-      - "8000:8000"
-    networks:
-      eth-model-local:
-        aliases:
-          - inference
-        ipv4_address: 172.22.0.4
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8000/inference/ETH"]
-      interval: 10s
-      timeout: 5s
-      retries: 12
-    volumes:
-      - ./inference-data:/app/data
-
-  updater:
-    container_name: updater-basic-eth-pred
-    build: .
-    environment:
-      - INFERENCE_API_ADDRESS=http://inference:8000
-    command: >
-      sh -c "
-      while true; do
-        python -u /app/update_app.py;
-        sleep 24h;
-      done
-      "
-    depends_on:
-      inference:
-        condition: service_healthy
-    networks:
-      eth-model-local:
-        aliases:
-          - updater
-        ipv4_address: 172.22.0.5
-
-  worker:
-    container_name: worker-basic-eth-pred
-    environment:
-      - INFERENCE_API_ADDRESS=http://inference:8000
-      - HOME=/data
-    build:
-      context: .
-      dockerfile: Dockerfile_b7s
-    entrypoint:
-      - "/bin/bash"
-      - "-c"
-      - |
-        if [ ! -f /data/keys/priv.bin ]; then
-          echo "Generating new private keys..."
-          mkdir -p /data/keys
-          cd /data/keys
-          allora-keys
-        fi
-        # Change boot-nodes below to the key advertised by your head
-        allora-node --role=worker --peer-db=/data/peerdb --function-db=/data/function-db \
-          --runtime-path=/app/runtime --runtime-cli=bls-runtime --workspace=/data/workspace \
-          --private-key=/data/keys/priv.bin --log-level=debug --port=9011 \
-          --boot-nodes=/ip4/172.22.0.100/tcp/9010/p2p/head-id \
-          --topic=allora-topic-1-worker \
-          --allora-chain-key-name=testkey \
-          --allora-chain-restore-mnemonic='WALLET_SEED_PHRASE' \
-          --allora-node-rpc-address=https://allora-rpc.testnet-1.testnet.allora.network/ \
-          --allora-chain-topic-id=1
-    volumes:
-      - ./worker-data:/data
-    working_dir: /data
-    depends_on:
-      - inference
-      - head
-    networks:
-      eth-model-local:
-        aliases:
-          - worker
-        ipv4_address: 172.22.0.10
-
-  head:
-    container_name: head-basic-eth-pred
-    image: alloranetwork/allora-inference-base-head:latest
-    environment:
-      - HOME=/data
-    entrypoint:
-      - "/bin/bash"
-      - "-c"
-      - |
-        if [ ! -f /data/keys/priv.bin ]; then
-          echo "Generating new private keys..."
-          mkdir -p /data/keys
-          cd /data/keys
-          allora-keys
-        fi
-        allora-node --role=head --peer-db=/data/peerdb --function-db=/data/function-db  \
-          --runtime-path=/app/runtime --runtime-cli=bls-runtime --workspace=/data/workspace \
-          --private-key=/data/keys/priv.bin --log-level=debug --port=9010 --rest-api=:6000
-    ports:
-      - "6000:6000"
-    volumes:
-      - ./head-data:/data
-    working_dir: /data
-    networks:
-      eth-model-local:
-        aliases:
-          - head
-        ipv4_address: 172.22.0.100
 
 
-networks:
-  eth-model-local:
-    driver: bridge
-    ipam:
-      config:
-        - subnet: 172.22.0.0/24
+ ## Config HuggingFace worker
+```console
+cd $HOME
+git clone https://github.com/allora-network/allora-huggingface-walkthrough
+cd allora-huggingface-walkthrough
+```
+```console
+mkdir -p worker-data
+chmod -R 777 worker-data
+```
+```
+cp config.example.json config.json
+nano config.json
+```
 
-volumes:
-  inference-data:
-  worker-data:
-  head-data:
+Paste below code:
+* Replace `testkey` with wallet name: `allorad keys list`
+* Replace `SeedPhrase` with your wallet seed phrase
+* `nodeRpc`: You can use `https://allora-rpc.testnet-1.testnet.allora.network/` or `https://sentries-rpc.testnet-1.testnet.allora.network/`
 ```
-Now We Build & Run The Image
-```
-docker compose build
-docker compose up -d
-```
-```
-docker ps
-```
-copy the container ID of the worker and run the below command
-![image](https://github.com/papaperez1/Allora/assets/118633093/c165c1f2-a357-4572-97ba-a545acc08f6e)
-
-```
-docker logs -f CONTAINER_ID
-```
-![image](https://github.com/papaperez1/Allora/assets/118633093/72dd4f6e-a10a-43c8-afd7-ef862d281dd2)
-
-### Check node status
-```
-apt install jq
-```
-```
-network_height=$(curl -s -X 'GET' 'https://allora-rpc.testnet-1.testnet.allora.network/abci_info?' -H 'accept: application/json' | jq -r .result.response.last_block_height) && \
-curl --location 'http://localhost:6000/api/v1/functions/execute' --header 'Content-Type: application/json' --data '{
-    "function_id": "bafybeigpiwl3o73zvvl6dxdqu7zqcub5mhg65jiky2xqb4rdhfmikswzqm",
-    "method": "allora-inference-function.wasm",
-    "parameters": null,
-    "topic": "1",
-    "config": {
-        "env_vars": [
-            {
-                "name": "BLS_REQUEST_PATH",
-                "value": "/api"
-            },
-            {
-                "name": "ALLORA_ARG_PARAMS",
-                "value": "ETH"
-            },
-            {
-                "name": "ALLORA_BLOCK_HEIGHT_CURRENT",
-                "value": "'"${network_height}"'"
+{
+    "wallet": {
+        "addressKeyName": "testkey",
+        "addressRestoreMnemonic": "SeedPhrase",
+        "alloraHomeDir": "/root/.allorad",
+        "gas": "1000000",
+        "gasAdjustment": 1.0,
+        "nodeRpc": "https://allora-rpc.testnet-1.testnet.allora.network/",
+        "maxRetries": 1,
+        "delay": 1,
+        "submitTx": false
+    },
+    "worker": [
+        {
+            "topicId": 1,
+            "inferenceEntrypointName": "api-worker-reputer",
+            "loopSeconds": 1,
+            "parameters": {
+                "InferenceEndpoint": "http://inference:8000/inference/{Token}",
+                "Token": "ETH"
             }
-        ],
-        "number_of_nodes": -1,
-        "timeout": 10
-    }
-}' | jq
+        },
+        {
+            "topicId": 2,
+            "inferenceEntrypointName": "api-worker-reputer",
+            "loopSeconds": 3,
+            "parameters": {
+                "InferenceEndpoint": "http://inference:8000/inference/{Token}",
+                "Token": "ETH"
+            }
+        },
+        {
+            "topicId": 3,
+            "inferenceEntrypointName": "api-worker-reputer",
+            "loopSeconds": 5,
+            "parameters": {
+                "InferenceEndpoint": "http://inference:8000/inference/{Token}",
+                "Token": "BTC"
+            }
+        },
+        {
+            "topicId": 4,
+            "inferenceEntrypointName": "api-worker-reputer",
+            "loopSeconds": 2,
+            "parameters": {
+                "InferenceEndpoint": "http://inference:8000/inference/{Token}",
+                "Token": "BTC"
+            }
+        },
+        {
+            "topicId": 5,
+            "inferenceEntrypointName": "api-worker-reputer",
+            "loopSeconds": 4,
+            "parameters": {
+                "InferenceEndpoint": "http://inference:8000/inference/{Token}",
+                "Token": "SOL"
+            }
+        },
+        {
+            "topicId": 6,
+            "inferenceEntrypointName": "api-worker-reputer",
+            "loopSeconds": 5,
+            "parameters": {
+                "InferenceEndpoint": "http://inference:8000/inference/{Token}",
+                "Token": "SOL"
+            }
+        },
+        {
+            "topicId": 7,
+            "inferenceEntrypointName": "api-worker-reputer",
+            "loopSeconds": 2,
+            "parameters": {
+                "InferenceEndpoint": "http://inference:8000/inference/{Token}",
+                "Token": "ETH"
+            }
+        },
+        {
+            "topicId": 8,
+            "inferenceEntrypointName": "api-worker-reputer",
+            "loopSeconds": 3,
+            "parameters": {
+                "InferenceEndpoint": "http://inference:8000/inference/{Token}",
+                "Token": "BNB"
+            }
+        },
+        {
+            "topicId": 9,
+            "inferenceEntrypointName": "api-worker-reputer",
+            "loopSeconds": 5,
+            "parameters": {
+                "InferenceEndpoint": "http://inference:8000/inference/{Token}",
+                "Token": "ARB"
+            }
+        }
+        
+    ]
+}
 ```
-Response:
 
-![image](https://github.com/user-attachments/assets/e48a687c-28ec-499d-bcb2-f6fe3bee3681)
+CTRL+X+Y+ENTER to save and exit
 
+## Create Coingecko API key
+https://www.coingecko.com/en/developers/dashboard
 
-### Step to Restart docker containers for Troubleshooting
+* Replace Coingecko API in `app.py`
 
 ```
-docker compose down
-```
-```
-docker compose up -d
+nano app.py
 ```
 
-References: 
-https://docs.allora.network/
+![Screenshot_186](https://github.com/user-attachments/assets/ad0c0192-4fb0-4708-9378-443e5adb1928)
+CTRL+X+Y+Enter to save & exit
 
-https://github.com/0xmoei/allora-testnet/edit/main/README.md
+## Run Huggingface Worker
+```console
+chmod +x init.config
+./init.config
+```
 
-https://github.com/papaperez1/Allora
+```console
+docker compose up --build -d
+```
+
+Logs:
+```
+docker compose logs -f worker
+```
+```
+docker compose logs -f
+```
 
 
