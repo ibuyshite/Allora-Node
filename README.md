@@ -57,7 +57,7 @@ docker-compose --version
 sudo groupadd docker
 sudo usermod -aG docker $USER
 ```
-```
+```console
 # Install Go
 sudo rm -rf /usr/local/go
 curl -L https://go.dev/dl/go1.22.4.linux-amd64.tar.gz | sudo tar -xzf - -C /usr/local
