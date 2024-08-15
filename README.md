@@ -57,7 +57,7 @@ docker-compose --version
 sudo groupadd docker
 sudo usermod -aG docker $USER
 ```
-```console
+```
 # Install Go
 sudo rm -rf /usr/local/go
 curl -L https://go.dev/dl/go1.22.4.linux-amd64.tar.gz | sudo tar -xzf - -C /usr/local
@@ -68,7 +68,7 @@ go version
 ```
 
 ## Install Allorad: Wallet
-```console
+```
 git clone https://github.com/allora-network/allora-chain.git
 
 cd allora-chain && make all
@@ -78,7 +78,7 @@ allorad version
 
 ## Add Wallet
 * You can use your keplr seed-phrase to recover your wallet or create a new one
-```console
+```
 # Recover your wallet with seed-phrase
 allorad keys add testkey --recover
 
@@ -89,7 +89,7 @@ cd $HOME
 git clone https://github.com/allora-network/allora-huggingface-walkthrough
 cd allora-huggingface-walkthrough
 ```
-```console
+```
 mkdir -p worker-data
 chmod -R 777 worker-data
 ```
