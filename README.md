@@ -198,7 +198,8 @@ https://www.coingecko.com/en/developers/dashboard
 nano app.py
 ```
 
-![Screenshot_186](https://github.com/user-attachments/assets/ad0c0192-4fb0-4708-9378-443e5adb1928)
+![image](https://github.com/user-attachments/assets/53cd0aea-79e8-4a7c-8b22-d9def17d9bed)
+
 CTRL+X+Y+Enter to save & exit
 
 ## Run Huggingface Worker
