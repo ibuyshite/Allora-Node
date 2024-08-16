@@ -86,7 +86,7 @@ nano config.json
 Paste below code:
 * Replace `testkey` with wallet name: `allorad keys list`
 * Replace `SeedPhrase` with your wallet seed phrase
-* `nodeRpc`: You can use `https://allora-rpc.testnet-1.testnet.allora.network/` or `https://sentries-rpc.testnet-1.testnet.allora.network/`
+* `nodeRpc`: You can use `https://allora-rpc.testnet-1.testnet.allora.network/` or `https://beta.multi-rpc.com/allora_testnet/ `
 ```
 {
     "wallet": {
