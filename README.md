@@ -3,7 +3,6 @@
 
 
 - You must need to buy a VPS for running Allora Node
-- You can buy from : [Contabo](https://pq.hosting/en/vps](https://www.anrdoezrs.net/click-101219450-13796470)
 - Buy VPS which is fulfilling all these requirements : 
 ```bash
 Operating System : Ubuntu 22.04
