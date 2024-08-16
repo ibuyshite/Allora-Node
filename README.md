@@ -3,7 +3,7 @@
 
 
 - You must need to buy a VPS for running Allora Node
-- You can buy from : [Contabo]([https://pq.hosting/en/vps](https://www.anrdoezrs.net/click-101219450-13796470))
+- You can buy from : [Contabo](https://pq.hosting/en/vps](https://www.anrdoezrs.net/click-101219450-13796470)
 - Buy VPS which is fulfilling all these requirements : 
 ```bash
 Operating System : Ubuntu 22.04
@@ -187,7 +187,7 @@ Paste below code:
 }
 ```
 
-CTRL+X+Y+ENTER to save and exit
+CTRL+X+Y+ENTER to Save & Exit
 
 ## Create Coingecko API key
 https://www.coingecko.com/en/developers/dashboard
@@ -200,7 +200,7 @@ nano app.py
 
 ![image](https://github.com/user-attachments/assets/53cd0aea-79e8-4a7c-8b22-d9def17d9bed)
 
-CTRL+X+Y+Enter to save & exit
+CTRL+X+Y+ENTER to Save & Exit
 
 ## Run Huggingface Worker
 ```console
@@ -219,5 +219,7 @@ docker compose logs -f worker
 ```
 docker compose logs -f
 ```
+![image](https://github.com/user-attachments/assets/92dc73b9-fd40-4f01-b8c6-3a092151f3d7)
+
 
 
