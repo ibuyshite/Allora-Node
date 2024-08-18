@@ -78,7 +78,7 @@ mkdir -p worker-data
 chmod -R 777 worker-data
 ```
 ```
-cp config.example.json config.json
+rm config.example.json
 nano config.json
 ```
 
@@ -94,7 +94,7 @@ Paste below code:
         "alloraHomeDir": "/root/.allorad",
         "gas": "1000000",
         "gasAdjustment": 1.0,
-        "nodeRpc": "https://allora-rpc.testnet-1.testnet.allora.network/",
+        "nodeRpc": "https://allora-testnet-rpc.polkachu.com/",
         "maxRetries": 1,
         "delay": 1,
         "submitTx": false
